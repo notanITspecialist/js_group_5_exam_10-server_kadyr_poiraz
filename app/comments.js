@@ -18,9 +18,12 @@ router.get('/', async (req, res) => {
             return;
         }
     }
+
+
     const data = await mysqlDb.getConnection().query(
         `SELECT * FROM comments`
     );
+
     res.send(data);
 });
 
