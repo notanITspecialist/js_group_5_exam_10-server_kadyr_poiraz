@@ -47,11 +47,19 @@ router.delete('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     const data = req.body;
 
-    await mysqlDb.getConnection().query(
-        `INSERT INTO comments (id_news, author, comment) VALUES
+    if(data.author) {
+        await mysqlDb.getConnection().query(
+            `INSERT INTO comments (id_news, author, comment) VALUES
          (?,?,?)`,
-        [data.id_news, data.author, data.comment]
-    );
+            [data.id_news, data.author, data.comment]
+        );
+    } else {
+        await mysqlDb.getConnection().query(
+            `INSERT INTO comments (id_news, comment) VALUES
+         (?,?)`,
+            [data.id_news, data.comment]
+        );
+    }
 
     res.send(`Comment to new with id ${data.id_news} added`);
 });
