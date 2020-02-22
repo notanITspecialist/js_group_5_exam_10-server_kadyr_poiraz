@@ -18,7 +18,7 @@ const upload = multer({storage});
 
 router.get('/', async (req, res) => {
     const data = await mysqlDb.getConnection().query(
-        `SELECT title, image, date FROM news_list`
+        `SELECT id, title, image, date FROM news_list`
     );
    res.send(data);
 });
@@ -40,11 +40,11 @@ router.delete('/:id', async (req, res) => {
         `SELECT * FROM news_list WHERE id = ?`,
         [req.params.id]
     );
-    fs.unlinkSync(`${config.uploadPath}/${data[0].image}`);
     await mysqlDb.getConnection().query(
         `DELETE FROM news_list WHERE id = ?`,
         [req.params.id]
     );
+    data[0].image && fs.unlinkSync(`${config.uploadPath}/${data[0].image}`);
     res.send(`New with id ${req.params.id} deleted`);
 });
 
